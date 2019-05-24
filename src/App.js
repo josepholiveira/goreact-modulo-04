@@ -1,11 +1,14 @@
-import React from "react";
+import React, { Fragment } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <h1> Hello World</h1>
-    </div>
-  );
-}
+import GlobalStyle from "./styles/global";
 
-export default App;
+import Sidebar from "./components/Sidebar";
+
+const src = () => (
+  <Fragment>
+    <GlobalStyle />
+    <Sidebar />
+  </Fragment>
+);
+
+export default src;
