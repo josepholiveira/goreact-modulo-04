@@ -1,44 +1,60 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Creators as PlaylistsActions } from "../../store/ducks/playlists";
+
+import Loading from "../../components/Loading";
 
 import { Container, Title, List, PlayList } from "./styles";
+class Browse extends Component {
+  static propTypes = {
+    getPlaylistsRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number,
+          title: PropTypes.string,
+          thumbnail: PropTypes.string,
+          description: PropTypes.string
+        })
+      ),
+      loading: PropTypes.bool
+    }).isRequired
+  };
 
-const Browse = () => (
-  <Container>
-    <Title>Navegar </Title>
+  componentDidMount() {
+    this.props.getPlaylistsRequest();
+  }
 
-    <List>
-      <PlayList to="/playlists/1">
-        <img
-          src="https://www.billboard.com/files/styles/900_wide/public/media/Green-Day-American-Idiot-album-covers-billboard-1000x1000.jpg"
-          alt="Cover"
-        />
-        <strong>Rock</strong>
-        <p>
-          Relaxe enquanto você programa ouvindo as melhores do rock mundial!
-        </p>
-      </PlayList>
-      <PlayList to="/playlists/1">
-        <img
-          src="https://www.billboard.com/files/styles/900_wide/public/media/Green-Day-American-Idiot-album-covers-billboard-1000x1000.jpg"
-          alt="Cover"
-        />
-        <strong>Rock</strong>
-        <p>
-          Relaxe enquanto você programa ouvindo as melhores do rock mundial!
-        </p>
-      </PlayList>
-      <PlayList to="/playlists/1">
-        <img
-          src="https://www.billboard.com/files/styles/900_wide/public/media/Green-Day-American-Idiot-album-covers-billboard-1000x1000.jpg"
-          alt="Cover"
-        />
-        <strong>Rock</strong>
-        <p>
-          Relaxe enquanto você programa ouvindo as melhores do rock mundial!
-        </p>
-      </PlayList>
-    </List>
-  </Container>
-);
+  render() {
+    return (
+      <Container>
+        <Title>Navegar {this.props.playlists.loading && <Loading />}</Title>
 
-export default Browse;
+        <List>
+          {this.props.playlists.data.map(playlist => (
+            <PlayList key={playlist.id} to={`/playlists/${playlist.id}`}>
+              <img src={playlist.thumbnail} alt={playlist.title} />
+              <strong>{playlist.title}</strong>
+              <p>{playlist.description}</p>
+            </PlayList>
+          ))}
+        </List>
+      </Container>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  playlists: state.playlists
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(PlaylistsActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Browse);
