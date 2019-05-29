@@ -102,3 +102,25 @@ export const SongList = styled.table`
     background: #282828;
   }
 `;
+
+export const SongItem = styled.tr`
+  border-top: 1px solid #282828;
+  font-size: 13px;
+  padding: 0 10px;
+  line-height: 40px;
+  background: ${props => (props.selected ? "#282828" : "transparent")};
+  color: ${props => (props.playing ? "#1ed760" : "#fff")};
+
+  &:first-child {
+    width: 80px;
+    text-align: right;
+  }
+
+  &:last-child {
+    text-align: right;
+  }
+
+  &:hover td {
+    background: #282828;
+  }
+`;
